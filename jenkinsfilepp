@@ -15,7 +15,7 @@ node
    
     
     }
-  /*
+ 
     stage('buildpackage')
     {
        sh "${mavenHome}/bin/mvn clean package"
@@ -41,5 +41,5 @@ node
     {
         emailext body: 'the build is success and completed', subject: 'build is success', to: 'madhusudhana1952@gmail.com,kishoreyuva50@gmail.com'
     }
-   */ 
+   
 }
