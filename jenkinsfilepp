@@ -1,0 +1,45 @@
+node
+{
+    def mavenHome=tool name: "maven3.6.3"
+     echo "GitHub BranhName ${env.BRANCH_NAME}"
+    echo "Jenkins Job Number ${env.BUILD_NUMBER}"
+    echo "Jenkins Node Name ${env.NODE_NAME}"
+  
+    echo "Jenkins Home ${env.JENKINS_HOME}"
+    echo "Jenkins URL ${env.JENKINS_URL}"
+    echo "JOB Name ${env.JOB_NAME}"
+    stage('checkout')
+  
+    {
+        git branch: 'development', credentialsId: 'abc101a8-42de-48d2-90a8-7c50d2414462', url: 'https://github.com/mss-17/maven-web-application.git'
+   
+    
+    }
+ 
+    stage('buildpackage')
+    {
+       sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('generatesonarqubereport')
+    {
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
+    stage('upload arctifactrepository')
+    {
+        sh "${mavenHome}/bin/mvn deploy"
+    }
+    stage('deployappinto tomcatserver')
+    {
+      sshagent(['ca167b06-77e8-4fe2-8276-5e69dd9e5614']) 
+      {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@35.154.106.251:/opt/apache-tomcat-8.5.51/webapps/"
+
+        }
+
+    }
+    stage('email')
+    {
+        emailext body: 'the build is success and completed', subject: 'build is success', to: 'madhusudhana1952@gmail.com,kishoreyuva50@gmail.com'
+    }
+   
+}
