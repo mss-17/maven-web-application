@@ -6,9 +6,7 @@ node
   
     {
         git branch: 'development', credentialsId: 'abc101a8-42de-48d2-90a8-7c50d2414462', url: 'https://github.com/mss-17/maven-web-application.git'
-   
-    
-    }
+        }
  
     stage('buildpackage')
     {
